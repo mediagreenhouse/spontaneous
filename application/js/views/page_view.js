@@ -161,8 +161,9 @@ Spontaneous.Views.PageView = (function($, S, document) {
 			this.unavailable = u;
 		},
 		open_uid_editor: function() {
-			this.panel.velocity({'height': '+=14'}, { duration: 200, complete: function() {
-				var view = $('h3', this.panel), edit = $('.edit', this.panel);
+      var panel = this.panel();
+			panel.velocity({'height': '+=14'}, { duration: 200, complete: function() {
+				var view = $('h3', panel), edit = $('.edit', panel);
 				view.hide();
 				edit.hide().empty();
 				var input = dom.input({'type':'text', 'autofocus':'autofocus'}).val(this.page.content.uid).select();
@@ -210,8 +211,9 @@ Spontaneous.Views.PageView = (function($, S, document) {
 			Spontaneous.Ajax.put(['/page',this.page.id(), 'uid'].join('/'), {'uid':uid}, this.uid_save_complete.bind(this));
 		},
 		uid_save_complete: function(response, status, xhr) {
+      var panel = this.panel();
 			if (status === 'success') {
-				var view = $('h3.uid', this.panel), edit = $('.edit', this.panel), uid = (response.uid === '' ? '----' : response.uid);
+				var view = $('h3.uid', panel), edit = $('.edit', panel), uid = (response.uid === '' ? '----' : response.uid);
 				// nasty but the value is only used for display
 				this.page.content.uid = response.uid;
 				view.text('#'+uid);
@@ -221,9 +223,10 @@ Spontaneous.Views.PageView = (function($, S, document) {
 		open_url_editor: function() {
 			this.unavailable = false;
 			this.url_editor_open = true;
+      var panel = this.panel()
 			Spontaneous.Ajax.get(['/page', this.page.id(), 'slug/unavailable'].join('/'), this.unavailable_loaded.bind(this));
-			this.panel.velocity({'height': '+=14'}, {duration: 200, complete: function() {
-				var view = $('h3', this.panel), edit = $('.edit', this.panel), spacer = $('.path-spacer', this.panel);
+			panel.velocity({'height': '+=14'}, {duration: 200, complete: function() {
+				var view = $('h3', panel), edit = $('.edit', panel), spacer = $('.path-spacer', panel);
 				spacer.add(view).hide();
 				edit.hide().empty();
 				var path = [''], parts = this.page.get('path').split('/'), slug = parts.pop();
@@ -320,7 +323,7 @@ Spontaneous.Views.PageView = (function($, S, document) {
 				if (this.url_editor_open) {
 
 					this.hide_path_error();
-					var view = $('h3.path', this.panel), edit = $('.edit', this.panel);
+					var view = $('h3.path', this._panel), edit = $('.edit', this._panel);
 					this.close();
 				}
 				this.page.set('path', response.path);
@@ -338,10 +341,11 @@ Spontaneous.Views.PageView = (function($, S, document) {
 		},
 		close: function() {
 			this.url_editor_open = false;
-			var view = $('h3', this.panel), edit = $('.edit', this.panel), spacer = $('.path-spacer', this.panel);
+      var panel = this.panel();
+			var view = $('h3', panel), edit = $('.edit', panel), spacer = $('.path-spacer', panel);
 			view.add(spacer).show();
 			edit.hide();
-			this.panel.velocity({'height': '-=14'}, 200);
+			panel.velocity({'height': '-=14'}, 200);
 		}
 	};
 	var PageView = new JS.Class(Spontaneous.Views.View, {
