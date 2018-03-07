@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# encoding: utf-8
 
 
 require File.expand_path('../../../test_helper', __FILE__)
@@ -331,6 +331,13 @@ describe "Image Fields" do
         @storage.url_mapper = proc { |path| "http://cdn.example.com#{path}" }
         @image.original.src.must_equal "http://cdn.example.com/00234/00010/dd8167/rose.jpg"
         @image.thumbnail.src.must_equal "http://cdn.example.com/00234/00010/dd8167/rose.thumbnail.jpg"
+      end
+
+      it "allows for public hosts with paths" do
+        @storage.public_host = "https://s3.amazonaws.com/my-bucket"
+        @image.original.src.must_equal "https://s3.amazonaws.com/my-bucket/00234/00010/dd8167/rose.jpg"
+        @image.thumbnail.src.must_equal "https://s3.amazonaws.com/my-bucket/00234/00010/dd8167/rose.thumbnail.jpg"
+
       end
     end
   end

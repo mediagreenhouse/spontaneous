@@ -156,7 +156,7 @@ module Spontaneous::Media::Store
           path_uri = URI.parse(path)
           return path if path_uri.absolute?
           url = uri.clone
-          url.path = path
+          url.path = File.join(uri.path, path)
           url.to_s
         rescue => e
           path
